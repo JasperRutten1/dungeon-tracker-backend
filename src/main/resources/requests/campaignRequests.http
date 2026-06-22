@@ -1,0 +1,13 @@
+### Create a new Campaign using the automated token
+POST http://localhost:8080/api/campaigns
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "name": "Curse of Strahd",
+  "description": "A gothic horror campaign set in the dark lands of Barovia."
+}
+
+### Fetch all campaigns for this user
+GET http://localhost:8080/api/campaigns
+Authorization: Bearer {{auth_token}}

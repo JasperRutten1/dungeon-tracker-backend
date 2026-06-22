@@ -3,6 +3,7 @@ package com.jasper.dungeontrackerbackend.controller;
 import com.jasper.dungeontrackerbackend.dto.user.AuthResponse;
 import com.jasper.dungeontrackerbackend.dto.user.LoginUserRequest;
 import com.jasper.dungeontrackerbackend.dto.user.RegisterUserRequest;
+import com.jasper.dungeontrackerbackend.dto.user.UserResponse;
 import com.jasper.dungeontrackerbackend.entities.User;
 import com.jasper.dungeontrackerbackend.services.JWTService;
 import com.jasper.dungeontrackerbackend.services.UserService;
@@ -26,7 +27,7 @@ public class UserController {
         try {
             User registeredUser = userService.registerUser(request);
             // Returns 201 Created along with the new user's generated UUID
-            return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.from(registeredUser));
         } catch (IllegalArgumentException e) {
             // Returns 400 Bad Request if the username or email is already taken
             return ResponseEntity.badRequest().body(e.getMessage());

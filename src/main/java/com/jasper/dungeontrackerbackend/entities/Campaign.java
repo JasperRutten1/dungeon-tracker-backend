@@ -1,5 +1,6 @@
 package com.jasper.dungeontrackerbackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,6 +31,7 @@ public class Campaign {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
+    @JsonBackReference
     private User owner;
 
     @CreationTimestamp
@@ -37,5 +40,10 @@ public class Campaign {
 
     // One campaign contains many characters
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CharacterEntity> characters;
+    private List<CharacterEntity> characters = new ArrayList<>();
+
+    public List<CharacterEntity> getCharacters() {
+        if(characters == null) return new ArrayList<>();
+        return characters;
+    }
 }

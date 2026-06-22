@@ -16,3 +16,8 @@ Content-Type: application/json
   "usernameOrEmail": "Jasper",
   "password": "1234"
 }
+
+> {%
+    client.global.set("auth_token", response.body.token);
+    client.log("Successfully saved JWT token to global variables!");
+%}
