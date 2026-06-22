@@ -1,8 +1,10 @@
 package com.jasper.dungeontrackerbackend.controller;
 
+import com.jasper.dungeontrackerbackend.dto.user.AuthResponse;
 import com.jasper.dungeontrackerbackend.dto.user.LoginUserRequest;
 import com.jasper.dungeontrackerbackend.dto.user.RegisterUserRequest;
 import com.jasper.dungeontrackerbackend.entities.User;
+import com.jasper.dungeontrackerbackend.services.JWTService;
 import com.jasper.dungeontrackerbackend.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final JWTService jwtService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterUserRequest request) {
@@ -35,10 +38,13 @@ public class UserController {
         Optional<User> userOpt = userService.loginUser(request);
 
         if (userOpt.isPresent()) {
-            // Returns 200 OK along with the validated user data
-            return ResponseEntity.ok(userOpt.get());
+            User user = userOpt.get();
+            // Generate the token for the authenticated user
+            String token = jwtService.generateToken(user);
+
+            // Return token + basic user profile info
+            return ResponseEntity.ok(new AuthResponse(token, user.getId(), user.getUsername()));
         } else {
-            // Returns 401 Unauthorized if authentication fails
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username, email, or password");
         }
     }
